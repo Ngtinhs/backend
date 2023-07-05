@@ -83,4 +83,35 @@ const loginUser = (UserLogin) => {
 }
 
 
-module.exports = { createUser, loginUser }
+const UpdateUser = (id, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findOne({ _id: id });
+
+            if (checkUser === null) {
+                resolve({
+                    status: "ok",
+                    message: "Người dùng không tồn tại",
+                })
+            }
+
+            const updatedUser = await User.findByIdAndUpdate(id, data, { new: true });
+
+            resolve({
+                status: 'Ok',
+                message: "Thành công",
+                data: updatedUser
+            })
+        } catch (err) {
+            reject(err);
+        }
+    })
+}
+
+
+module.exports =
+{
+    createUser,
+    loginUser,
+    UpdateUser
+}
