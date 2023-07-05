@@ -68,10 +68,25 @@ const UpdateUser = async (req, res) => {
     }
 }
 
+const DeteleUser = async (req, res) => {
+    try {
+        const userId = req.params.id
+        if (!userId) {
+            return res.status(404).json({ message: "UserID not found" })
+        }
+
+        const response = await UserService.DeteleUser(userId)
+        return res.status(200).json(response)
+    } catch (err) {
+        return res.status(404).json({ message: err });
+    }
+}
+
 
 module.exports =
 {
     createUser,
     loginUser,
-    UpdateUser
+    UpdateUser,
+    DeteleUser
 }

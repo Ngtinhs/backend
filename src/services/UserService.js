@@ -109,9 +109,34 @@ const UpdateUser = (id, data) => {
 }
 
 
+const DeteleUser = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findOne({ _id: id });
+
+            if (checkUser === null) {
+                resolve({
+                    status: "ok",
+                    message: "Người dùng không tồn tại",
+                })
+            }
+
+            await User.findByIdAndDelete(id);
+
+            resolve({
+                status: 'Ok',
+                message: "Thành công",
+            })
+        } catch (err) {
+            reject(err);
+        }
+    })
+}
+
 module.exports =
 {
     createUser,
     loginUser,
-    UpdateUser
+    UpdateUser,
+    DeteleUser
 }
