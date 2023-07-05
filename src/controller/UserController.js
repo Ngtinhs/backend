@@ -34,7 +34,7 @@ const loginUser = async (req, res) => {
         const { name, email, password, confirmPassword, phone } = req.body
         const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
         const isCheckEmail = reg.test(email)
-        if (!name || !email || !password || !confirmPassword || !phone) {
+        if (!email || !password) {
             return res.status(200).json({
                 status: "Error",
                 message: "Lỗi"
@@ -82,11 +82,39 @@ const DeteleUser = async (req, res) => {
     }
 }
 
+const getAllUser = async (req, res) => {
+    try {
+        const response = await UserService.getAllUser()
+        return res.status(200).json(response)
+    } catch (err) {
+        return res.status(404).json({ message: err });
+    }
+}
+
+
+const getDetailsUser = async (req, res) => {
+    try {
+        const userId = req.params.id
+        if (!userId) {
+            return res.status(404).json({ message: "UserID not found" })
+        }
+
+        const response = await UserService.getDetailsUser(userId)
+        return res.status(200).json(response)
+    } catch (err) {
+        return res.status(404).json({ message: err });
+    }
+}
+
+
+
 
 module.exports =
 {
     createUser,
     loginUser,
     UpdateUser,
-    DeteleUser
+    DeteleUser,
+    getAllUser,
+    getDetailsUser
 }

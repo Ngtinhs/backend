@@ -133,10 +133,55 @@ const DeteleUser = (id) => {
     })
 }
 
+const getAllUser = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const allUser = await User.find();
+
+            resolve({
+                status: 'Ok',
+                message: "Thành công",
+                data: allUser
+            })
+        } catch (err) {
+            reject(err);
+        }
+    })
+}
+
+const getDetailsUser = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const user = await User.findOne({ _id: id });
+
+            if (user === null) {
+                resolve({
+                    status: "ok",
+                    message: "Người dùng không tồn tại",
+                })
+            }
+
+
+            resolve({
+                status: 'Ok',
+                message: "Thành công",
+                user
+            })
+        } catch (err) {
+            reject(err);
+        }
+    })
+}
+
+
+
+
 module.exports =
 {
     createUser,
     loginUser,
     UpdateUser,
-    DeteleUser
+    DeteleUser,
+    getAllUser,
+    getDetailsUser
 }
