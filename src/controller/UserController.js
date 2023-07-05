@@ -29,4 +29,28 @@ const createUser = async (req, res) => {
 }
 
 
-module.exports = { createUser }
+const loginUser = async (req, res) => {
+    try {
+        const { name, email, password, confirmPassword, phone } = req.body
+        const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
+        const isCheckEmail = reg.test(email)
+        if (!name || !email || !password || !confirmPassword || !phone) {
+            return res.status(200).json({
+                status: "Error",
+                message: "Lỗi"
+            })
+        } else if (!isCheckEmail) {
+            return res.status(200).json({
+                status: "Error",
+                message: "Lỗi nhập email"
+            })
+        }
+        const response = await UserService.loginUser(req.body)
+        return res.status(200).json(response)
+    } catch (err) {
+        return res.status(404).json({ message: err.message });
+    }
+}
+
+
+module.exports = { createUser, loginUser }
