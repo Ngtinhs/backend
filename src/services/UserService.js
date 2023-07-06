@@ -165,15 +165,13 @@ const getDetailsUser = (id) => {
             resolve({
                 status: 'Ok',
                 message: "Thành công",
-                user
+                data: user
             })
         } catch (err) {
             reject(err);
         }
     })
 }
-
-
 
 
 module.exports =
