@@ -45,7 +45,7 @@ const UpdateProduct = (id, data) => {
             if (checkProduct === null) {
                 resolve({
                     status: "ok",
-                    message: "Người dùng không tồn tại",
+                    message: "Sản phẩm không tồn tại",
                 })
             }
 
@@ -63,8 +63,75 @@ const UpdateProduct = (id, data) => {
 }
 
 
+const getDetailsProduct = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const dataProduct = await Product.findOne({ _id: id });
+
+            if (dataProduct === null) {
+                resolve({
+                    status: "ok",
+                    message: "Sản phẩm không tồn tại",
+                })
+            }
+            resolve({
+                status: 'Ok',
+                message: "Thành công",
+                data: dataProduct
+            })
+        } catch (err) {
+            reject(err);
+        }
+    })
+}
+
+
+const getAllProduct = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const allProduct = await Product.find();
+
+            resolve({
+                status: 'Ok',
+                message: "Thành công",
+                data: allProduct
+            })
+        } catch (err) {
+            reject(err);
+        }
+    })
+}
+
+const DeleteProduct = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkProduct = await Product.findOne({ _id: id });
+
+            if (checkProduct === null) {
+                resolve({
+                    status: "ok",
+                    message: "Người dùng không tồn tại",
+                })
+            }
+
+            await Product.findByIdAndDelete(id);
+
+            resolve({
+                status: 'Ok',
+                message: "Thành công",
+            })
+        } catch (err) {
+            reject(err);
+        }
+    })
+}
+
+
 module.exports =
 {
     createProduct,
-    UpdateProduct
+    UpdateProduct,
+    getDetailsProduct,
+    getAllProduct,
+    DeleteProduct
 }
