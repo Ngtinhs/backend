@@ -86,12 +86,39 @@ const getDetailsProduct = (id) => {
 }
 
 
-const getAllProduct = (limit, page) => {
+const getAllProduct = (limit, page, sort, filter) => {
     return new Promise(async (resolve, reject) => {
         try {
             const totalProducts = await Product.count()
-            const allProduct = await Product.find().limit(limit).skip(page * limit);
+            if (filter) {
+                const label = filter[0]
+                const allProductFilter = await Product.find({
+                    name: { [label]: { '$regex': filter[1] } }.limit(limit).skip(page * limit),
+                })
+                resolve({
+                    status: 'Ok',
+                    message: "Thành công",
+                    data: allProductFilter,
+                    total: totalProducts,
+                    pageCurrent: Number(page + 1),
+                    totalPages: Math.ceil(totalProducts / limit)
+                })
+            }
 
+            if (sort) {
+                const objectSort = {}
+                objectSort[sort[1]] = sort[0]
+                const allProductSort = await Product.find().limit(limit).skip(page * limit).sort(objectSort);
+                resolve({
+                    status: 'Ok',
+                    message: "Thành công",
+                    data: allProductSort,
+                    total: totalProducts,
+                    pageCurrent: Number(page + 1),
+                    totalPages: Math.ceil(totalProducts / limit)
+                })
+            }
+            const allProduct = await Product.find().limit(limit).skip(page * limit)
             resolve({
                 status: 'Ok',
                 message: "Thành công",
