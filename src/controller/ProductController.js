@@ -6,7 +6,7 @@ const createProduct = async (req, res) => {
 
         if (!name || !image || !type || !price || !countInStock || !rating) {
             return res.status(200).json({
-                status: "Error",
+                status: "ERR",
                 message: "Lỗi"
             })
         }

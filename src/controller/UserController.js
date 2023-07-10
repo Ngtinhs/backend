@@ -6,19 +6,19 @@ const createUser = async (req, res) => {
         const { name, email, password, confirmPassword, phone } = req.body
         const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
         const isCheckEmail = reg.test(email)
-        if (!name || !email || !password || !confirmPassword || !phone) {
+        if (!email || !password || !confirmPassword) {
             return res.status(200).json({
-                status: "Error",
+                status: "ERR",
                 message: "Lỗi"
             })
         } else if (!isCheckEmail) {
             return res.status(200).json({
-                status: "Error",
+                status: "ERR",
                 message: "Lỗi nhập email"
             })
         } else if (password !== confirmPassword) {
             return res.status(200).json({
-                status: "Error",
+                status: "ERR",
                 message: "Xác nhận mật khẩu không khớp"
             })
         }
@@ -32,22 +32,28 @@ const createUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
     try {
-        const { name, email, password, confirmPassword, phone } = req.body
+        const { email, password } = req.body
         const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
         const isCheckEmail = reg.test(email)
         if (!email || !password) {
             return res.status(200).json({
-                status: "Error",
+                status: "ERR",
                 message: "Lỗi"
             })
         } else if (!isCheckEmail) {
             return res.status(200).json({
-                status: "Error",
+                status: "ERR",
                 message: "Lỗi nhập email"
             })
         }
         const response = await UserService.loginUser(req.body)
-        return res.status(200).json(response)
+        const { refresh_token, ...newResponse } = response
+        res.cookie("refresh_token", refresh_token, {
+            HttpOnly: true,
+            Secure: true
+        })
+
+        return res.status(200).json(newResponse)
     } catch (err) {
         return res.status(404).json({ message: err.message });
     }
@@ -110,7 +116,7 @@ const getDetailsUser = async (req, res) => {
 
 const refreshToken = async (req, res) => {
     try {
-        const token = req.headers.token.split(' ')[1]
+        const token = req.cookies.refresh_token
         if (!token) {
             return res.status(404).json({ message: "The token is reqired" })
         }

@@ -10,17 +10,16 @@ const authMiddleware = (req, res, next) => {
         if (err) {
             return res.status(404).json({
                 message: "Không có quyền!",
-                status: "ERROR"
+                status: "ERR"
             })
         }
 
-        const { payload } = user
-        if (payload?.isAdmin) {
+        if (user?.isAdmin) {
             next()
         } else {
             return res.status(404).json({
                 message: "Không có quyền!",
-                status: "ERROR"
+                status: "ERR"
             })
         }
     })
@@ -35,17 +34,16 @@ const authUserMiddleware = (req, res, next) => {
         if (err) {
             return res.status(404).json({
                 message: "Không có quyền!",
-                status: "ERROR"
+                status: "ERR"
             })
         }
 
-        const { payload } = user
-        if (payload?.isAdmin || payload?.id === userId) {
+        if (user?.isAdmin || user?.id === userId) {
             next()
         } else {
             return res.status(404).json({
                 message: "Không có quyền!",
-                status: "ERROR"
+                status: "ERR"
             })
         }
     })

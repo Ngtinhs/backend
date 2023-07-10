@@ -9,7 +9,7 @@ const createUser = (newUser) => {
             const checkUser = await User.findOne({ email: email })
             if (checkUser !== null) {
                 resolve({
-                    status: "ok",
+                    status: "ERR",
                     message: "Email đã tồn tại",
                 })
             }
@@ -24,8 +24,8 @@ const createUser = (newUser) => {
 
             if (createdUser) {
                 resolve({
-                    status: 'Ok',
-                    message: "User created successfully",
+                    status: 'OK',
+                    message: "Tạo tài khoản thành công",
                     data: createdUser
                 })
             }
@@ -38,23 +38,19 @@ const createUser = (newUser) => {
 
 const loginUser = (UserLogin) => {
     return new Promise(async (resolve, reject) => {
-        const { name, email, password, confirmPassword, phone } = UserLogin
+        const { email, password } = UserLogin
         try {
             const checkUser = await User.findOne({ email: email })
             if (checkUser === null) {
                 resolve({
-                    status: "ok",
+                    status: "ERR",
                     message: "Người dùng không tồn tại",
                 })
             }
-
-
             const comparePassword = bcrypt.compareSync(password, checkUser.password)
-
-
             if (!comparePassword) {
                 resolve({
-                    status: "ok",
+                    status: "ERR",
                     message: "Mật khẩu hoặc tài khoản không đúng",
                 })
             }
@@ -71,7 +67,7 @@ const loginUser = (UserLogin) => {
             })
 
             resolve({
-                status: 'Ok',
+                status: 'OK',
                 message: "Thành công",
                 access_token,
                 refresh_token
@@ -90,7 +86,7 @@ const UpdateUser = (id, data) => {
 
             if (checkUser === null) {
                 resolve({
-                    status: "ok",
+                    status: "ERR",
                     message: "Người dùng không tồn tại",
                 })
             }
@@ -98,7 +94,7 @@ const UpdateUser = (id, data) => {
             const updatedUser = await User.findByIdAndUpdate(id, data, { new: true });
 
             resolve({
-                status: 'Ok',
+                status: 'OK',
                 message: "Thành công",
                 data: updatedUser
             })
@@ -116,7 +112,7 @@ const DeteleUser = (id) => {
 
             if (checkUser === null) {
                 resolve({
-                    status: "ok",
+                    status: "ERR",
                     message: "Người dùng không tồn tại",
                 })
             }
@@ -124,7 +120,7 @@ const DeteleUser = (id) => {
             await User.findByIdAndDelete(id);
 
             resolve({
-                status: 'Ok',
+                status: 'OK',
                 message: "Thành công",
             })
         } catch (err) {
@@ -139,7 +135,7 @@ const getAllUser = () => {
             const allUser = await User.find();
 
             resolve({
-                status: 'Ok',
+                status: 'OK',
                 message: "Thành công",
                 data: allUser
             })
@@ -156,14 +152,14 @@ const getDetailsUser = (id) => {
 
             if (user === null) {
                 resolve({
-                    status: "ok",
+                    status: "OK",
                     message: "Người dùng không tồn tại",
                 })
             }
 
 
             resolve({
-                status: 'Ok',
+                status: 'OK',
                 message: "Thành công",
                 data: user
             })
