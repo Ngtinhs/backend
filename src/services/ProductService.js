@@ -8,7 +8,7 @@ const createProduct = (newProduct) => {
             const checkProduct = await Product.findOne({ name: name })
             if (checkProduct !== null) {
                 resolve({
-                    status: "ok",
+                    status: "OK",
                     message: "Tên sản phẩm đã tồn tại",
                 })
             }
@@ -25,7 +25,7 @@ const createProduct = (newProduct) => {
 
             if (createProduct) {
                 resolve({
-                    status: 'Ok',
+                    status: 'OK',
                     message: "Thêm sản phẩm thành công",
                     data: createProduct
                 })
@@ -44,7 +44,7 @@ const UpdateProduct = (id, data) => {
 
             if (checkProduct === null) {
                 resolve({
-                    status: "ok",
+                    status: "OK",
                     message: "Sản phẩm không tồn tại",
                 })
             }
@@ -52,12 +52,26 @@ const UpdateProduct = (id, data) => {
             const updatedProduct = await Product.findByIdAndUpdate(id, data, { new: true });
 
             resolve({
-                status: 'Ok',
+                status: 'OK',
                 message: "Thành công",
                 data: updatedProduct
             })
         } catch (err) {
             reject(err);
+        }
+    })
+}
+
+const deleteManyProduct = (ids) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            await Product.deleteMany({ _id: ids })
+            resolve({
+                status: 'OK',
+                message: 'Delete product success',
+            })
+        } catch (e) {
+            reject(e)
         }
     })
 }
@@ -140,7 +154,7 @@ const DeleteProduct = (id) => {
 
             if (checkProduct === null) {
                 resolve({
-                    status: "ok",
+                    status: "OK",
                     message: "Người dùng không tồn tại",
                 })
             }
@@ -148,7 +162,7 @@ const DeleteProduct = (id) => {
             await Product.findByIdAndDelete(id);
 
             resolve({
-                status: 'Ok',
+                status: 'OK',
                 message: "Thành công",
             })
         } catch (err) {
@@ -164,5 +178,6 @@ module.exports =
     UpdateProduct,
     getDetailsProduct,
     getAllProduct,
-    DeleteProduct
+    DeleteProduct,
+    deleteManyProduct
 }
