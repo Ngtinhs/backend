@@ -17,11 +17,11 @@ const createProduct = (newProduct) => {
                 name,
                 image,
                 type,
+                countInStock: Number(countInStock),
                 price,
-                countInStock,
                 rating,
                 description,
-                discount
+                discount: Number(discount),
             })
 
             if (createProduct) {
