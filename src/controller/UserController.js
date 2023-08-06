@@ -51,10 +51,11 @@ const loginUser = async (req, res) => {
         res.cookie("refresh_token", refresh_token, {
             httpOnly: true,
             secure: false,
-            samesite: "strict"
+            samesite: "strict",
+            path: '/'
         })
 
-        return res.status(200).json(newResponse)
+        return res.status(200).json({ ...newReponse, refresh_token })
     } catch (err) {
         return res.status(404).json({ message: err.message });
     }
