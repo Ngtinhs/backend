@@ -119,7 +119,7 @@ const getDetailsUser = async (req, res) => {
 const refreshToken = async (req, res) => {
     console.log("req.cookies.refresh_token", req.cookies.refresh_token)
     try {
-        const token = req.cookies.refresh_token
+        let token = req.headers.token.split(' ')[1]
         if (!token) {
             return res.status(404).json({ message: "The token is reqired" })
         }
