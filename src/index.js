@@ -21,13 +21,14 @@ app.use(cookieParser())
 
 routes(app)
 
-mongoose.connect(`${process.env.MONGO_DB}`)
+mongoose.connect(`${process.env.MONGO_DB}`, { useNewUrlParser: true })
     .then(() => {
         console.log("Connected db successfully")
     })
     .catch((err) => {
         console.log(err);
     });
+mongoose.set('strictQuery', false);
 
 app.listen(port, () => {
     console.log("Server listening on port " + port)
