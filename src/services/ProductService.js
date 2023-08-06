@@ -108,7 +108,7 @@ const getAllProduct = (limit, page, sort, filter) => {
             let allProduct = []
             if (filter) {
                 const label = filter[0];
-                const allObjectFilter = await Product.find({ [label]: { '$regex': filter[1] } }).limit(limit).skip(page * limit)
+                const allObjectFilter = await Product.find({ [label]: { '$regex': filter[1] } }).limit(limit).skip(page * limit).sort({ createdAt: -1, updatedAt: -1 })
                 resolve({
                     status: 'OK',
                     message: 'Success',
@@ -121,7 +121,7 @@ const getAllProduct = (limit, page, sort, filter) => {
             if (sort) {
                 const objectSort = {}
                 objectSort[sort[1]] = sort[0]
-                const allProductSort = await Product.find().limit(limit).skip(page * limit).sort(objectSort)
+                const allProductSort = await Product.find().limit(limit).skip(page * limit).sort(objectSort).sort({ createdAt: -1, updatedAt: -1 })
                 resolve({
                     status: 'OK',
                     message: 'Success',
@@ -132,9 +132,9 @@ const getAllProduct = (limit, page, sort, filter) => {
                 })
             }
             if (!limit) {
-                allProduct = await Product.find()
+                allProduct = await Product.find().sort({ createdAt: -1, updatedAt: -1 })
             } else {
-                allProduct = await Product.find().limit(limit).skip(page * limit)
+                allProduct = await Product.find().limit(limit).skip(page * limit).sort({ createdAt: -1, updatedAt: -1 })
             }
             resolve({
                 status: 'OK',

@@ -55,7 +55,7 @@ const loginUser = async (req, res) => {
             path: '/'
         })
 
-        return res.status(200).json({ ...newReponse, refresh_token })
+        return res.status(200).json({ ...newResponse, refresh_token })
     } catch (err) {
         return res.status(404).json({ message: err.message });
     }
