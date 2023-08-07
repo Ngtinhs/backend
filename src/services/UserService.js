@@ -1,19 +1,20 @@
-const User = require('../models/UserModel');
-const bcrypt = require('bcrypt');
-const { genneralAcccessToken, genneralRefreshToken } = require('./JwtService');
+const User = require("../models/UserModel")
+const bcrypt = require("bcrypt")
+const { genneralAccessToken, genneralRefreshToken } = require("./JwtService")
 
 const createUser = (newUser) => {
     return new Promise(async (resolve, reject) => {
         const { name, email, password, confirmPassword, phone } = newUser
         try {
-            const checkUser = await User.findOne({ email: email })
+            const checkUser = await User.findOne({
+                email: email
+            })
             if (checkUser !== null) {
                 resolve({
-                    status: "ERR",
-                    message: "Email đã tồn tại",
+                    status: 'ERR',
+                    message: 'The email is already'
                 })
             }
-
             const hash = bcrypt.hashSync(password, 10)
             const createdUser = await User.create({
                 name,
@@ -21,85 +22,107 @@ const createUser = (newUser) => {
                 password: hash,
                 phone
             })
-
             if (createdUser) {
                 resolve({
                     status: 'OK',
-                    message: "Tạo tài khoản thành công",
+                    message: 'SUCCESS',
                     data: createdUser
                 })
             }
-        } catch (err) {
-            reject(err);
+        } catch (e) {
+            reject(e)
         }
     })
 }
 
-
-const loginUser = (UserLogin) => {
+const loginUser = (userLogin) => {
     return new Promise(async (resolve, reject) => {
-        const { email, password } = UserLogin
+        const { email, password } = userLogin
         try {
-            const checkUser = await User.findOne({ email: email })
+            const checkUser = await User.findOne({
+                email: email
+            })
             if (checkUser === null) {
                 resolve({
-                    status: "ERR",
-                    message: "Người dùng không tồn tại",
+                    status: 'ERR',
+                    message: 'The user is not defined'
                 })
             }
             const comparePassword = bcrypt.compareSync(password, checkUser.password)
+
             if (!comparePassword) {
                 resolve({
-                    status: "ERR",
-                    message: "Mật khẩu hoặc tài khoản không đúng",
+                    status: 'ERR',
+                    message: 'The password or user is incorrect'
                 })
             }
-
-            const access_token = await genneralAcccessToken({
+            const access_token = await genneralAccessToken({
                 id: checkUser.id,
-                isAdmin: checkUser.isAdmin,
+                isAdmin: checkUser.isAdmin
             })
-
 
             const refresh_token = await genneralRefreshToken({
                 id: checkUser.id,
-                isAdmin: checkUser.isAdmin,
+                isAdmin: checkUser.isAdmin
             })
 
             resolve({
                 status: 'OK',
-                message: "Thành công",
+                message: 'SUCCESS',
                 access_token,
                 refresh_token
             })
-        } catch (err) {
-            reject(err);
+        } catch (e) {
+            reject(e)
         }
     })
 }
 
-
-const UpdateUser = (id, data) => {
+const updateUser = (id, data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const checkUser = await User.findOne({ _id: id });
-
+            const checkUser = await User.findOne({
+                _id: id
+            })
             if (checkUser === null) {
                 resolve({
-                    status: "ERR",
-                    message: "Người dùng không tồn tại",
+                    status: 'ERR',
+                    message: 'The user is not defined'
                 })
             }
 
-            const updatedUser = await User.findByIdAndUpdate(id, data, { new: true });
-
+            const updatedUser = await User.findByIdAndUpdate(id, data, { new: true })
             resolve({
                 status: 'OK',
-                message: "Thành công",
+                message: 'SUCCESS',
                 data: updatedUser
             })
-        } catch (err) {
-            reject(err);
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+const deleteUser = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findOne({
+                _id: id
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+
+            await User.findByIdAndDelete(id)
+            resolve({
+                status: 'OK',
+                message: 'Delete user success',
+            })
+        } catch (e) {
+            reject(e)
         }
     })
 }
@@ -119,43 +142,17 @@ const deleteManyUser = (ids) => {
     })
 }
 
-
-const DeteleUser = (id) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const checkUser = await User.findOne({ _id: id });
-
-            if (checkUser === null) {
-                resolve({
-                    status: "ERR",
-                    message: "Người dùng không tồn tại",
-                })
-            }
-
-            await User.findByIdAndDelete(id);
-
-            resolve({
-                status: 'OK',
-                message: "Thành công",
-            })
-        } catch (err) {
-            reject(err);
-        }
-    })
-}
-
 const getAllUser = () => {
     return new Promise(async (resolve, reject) => {
         try {
-            const allUser = await User.find().sort({ createdAt: -1, updatedAt: -1 })
-
+            const allUser = await User.find().sort({createdAt: -1, updatedAt: -1})
             resolve({
                 status: 'OK',
-                message: "Thành công",
+                message: 'Success',
                 data: allUser
             })
-        } catch (err) {
-            reject(err);
+        } catch (e) {
+            reject(e)
         }
     })
 }
@@ -163,34 +160,31 @@ const getAllUser = () => {
 const getDetailsUser = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const user = await User.findOne({ _id: id });
-
+            const user = await User.findOne({
+                _id: id
+            })
             if (user === null) {
                 resolve({
-                    status: "OK",
-                    message: "Người dùng không tồn tại",
+                    status: 'ERR',
+                    message: 'The user is not defined'
                 })
             }
-
-
             resolve({
                 status: 'OK',
-                message: "Thành công",
+                message: 'SUCESS',
                 data: user
             })
-        } catch (err) {
-            reject(err);
+        } catch (e) {
+            reject(e)
         }
     })
 }
 
-
-module.exports =
-{
+module.exports = {
     createUser,
     loginUser,
-    UpdateUser,
-    DeteleUser,
+    updateUser,
+    deleteUser,
     getAllUser,
     getDetailsUser,
     deleteManyUser

@@ -1,7 +1,7 @@
 const OrderService = require('../services/OrderService')
 
 const createOrder = async (req, res) => {
-    try {
+    try { 
         const { paymentMethod, itemsPrice, shippingPrice, totalPrice, fullName, address, city, phone } = req.body
         if (!paymentMethod || !itemsPrice || !shippingPrice || !totalPrice || !fullName || !address || !city || !phone) {
             return res.status(200).json({
@@ -30,7 +30,7 @@ const getAllOrderDetails = async (req, res) => {
         const response = await OrderService.getAllOrderDetails(userId)
         return res.status(200).json(response)
     } catch (e) {
-        console.log(e)
+        // console.log(e)
         return res.status(404).json({
             message: e
         })
@@ -49,7 +49,7 @@ const getDetailsOrder = async (req, res) => {
         const response = await OrderService.getOrderDetails(orderId)
         return res.status(200).json(response)
     } catch (e) {
-        console.log(e)
+        // console.log(e)
         return res.status(404).json({
             message: e
         })
@@ -58,18 +58,18 @@ const getDetailsOrder = async (req, res) => {
 
 const cancelOrderDetails = async (req, res) => {
     try {
-        const orderId = req.params.id
-        const data = req.body
+        const data= req.body.orderItems
+        const orderId= req.body.orderId
         if (!orderId) {
             return res.status(200).json({
                 status: 'ERR',
-                message: 'The userId is required'
+                message: 'The orderId is required'
             })
         }
         const response = await OrderService.cancelOrderDetails(orderId, data)
         return res.status(200).json(response)
     } catch (e) {
-        console.log(e)
+        // console.log(e)
         return res.status(404).json({
             message: e
         })
